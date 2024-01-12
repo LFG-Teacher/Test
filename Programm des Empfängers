@@ -1,0 +1,40 @@
+#include <SoftwareSerial.h>
+#include <LiquidCrystal_I2C.h>
+SoftwareSerial BTserial(8, 9);
+LiquidCrystal_I2C Lcd(0x27, 16, 2);
+String receiveMsg = "";
+
+void setup()
+{
+  pinMode(10,OUTPUT);
+  Serial.begin(9600);
+  Serial.print("Sketch: "); Serial.println(__FILE__);
+  Serial.print("Uploaded: "); Serial.println(__DATE__);        
+  Serial.println(" ");
+
+  BTserial.begin(9600);
+  Serial.println("BTserial started at 9600");
+  Serial.println(" ");
+  Lcd.init();
+  Lcd.backlight();
+}
+
+void loop()
+{
+ 
+  if (BTserial.available())
+  {
+   
+    receiveMsg = BTserial.readString();
+    Serial.println(receiveMsg);
+    Lcd.setCursor(0,0);
+    Lcd.clear();
+    Lcd.print(receiveMsg);
+    tone(10, 262);
+    delay(200);
+    noTone(10);
+    tone(10, 392);
+    delay(400);
+    noTone(10);
+  }
+}
