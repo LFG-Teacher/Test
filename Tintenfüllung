@@ -1,0 +1,41 @@
+#include<Servo.h>                         // Bibilothek Servo
+Servo S1;                                 // Bibilothek Servo einbinden
+#include "MotorDriver.h"                  // Bibilothek Motordriver 
+MotorDriver motor;                        // Bibilothek Motordriver einbinden
+int a;                                    // Definiere a
+int b;                                    // Definiere b
+void setup() {
+  pinMode(4,INPUT_PULLUP);                // Pin 4 Input     -> Taster
+  pinMode(7, OUTPUT);                     // Pin 7 Output    -> 
+  pinMode(6, OUTPUT);                     // Pin 6 Output    -> Pumpe
+  pinMode(5, OUTPUT);                     // Pin 5 Output    -> LED 
+  Serial.begin(9600);                     // Serial Begin         
+  motor.begin();                          // Motoren starten
+}
+
+void loop() {
+      if(digitalRead(4)==0){              // Falls Taster gedrückt
+         digitalWrite(5,HIGH);            // LED an
+         motor.speed(1,100);              // Motor 1 Speed 100
+         delay(1400);                     // Warte 1.45s
+         motor.brake(1);                  // Motor 1 bremsen
+         delay(100);                      // Warte 100 ms
+         motor.speed(0,100);              // Motor 0 Speed 50
+         delay(650);                      // Warte 1.3 S
+         motor.speed(0,-100);             // Motor 0 Speed -100
+         delay(450);                      // 450 MS warten
+         motor.brake(0);                  // Motor 0 bremsen
+         b=b+1;    
+         digitalWrite(5,LOW);             // LED aus 
+    }
+      if (b==2){                          // Wenn b gleich 2 dann
+      digitalWrite(5,HIGH);               // LED an
+      analogWrite(6,-100);                // Pumpe Speed -100
+      motor.speed(0,-50);                 // Motor 0 Speed -25
+      delay(2500);                        // Warte 3 s
+      analogWrite(6,0);                   // Pumpe Speed 0
+      motor.brake(0);                     // Motor 0 bremsen
+      b=0;
+      digitalWrite(5,LOW);                // LED aus 
+ }
+}
